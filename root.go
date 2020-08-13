@@ -2,9 +2,10 @@ package main
 
 import (
 	"log"
-	"syscall/js"
+	//"syscall/js"
 
 	"github.com/vugu/vugu"
+	"github.com/vugu/vugu/js"
 )
 
 func (c *Root) ExecFromGo(e vugu.DOMEvent) {
@@ -31,6 +32,5 @@ func (c *Root) ExecFromGo(e vugu.DOMEvent) {
 func (c *Root) InvokeJS(e vugu.DOMEvent) {
 	log.Printf("In InvokeJS...\n")
 
-	h := js.Global().Get("helperFunc")
-	h.Invoke()
+	js.Global().Get("helperFunc").Invoke()
 }
