@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<title>JQuery test</title>
+<meta charset="utf-8"/>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+
+<!-- styles -->
+</head>
+<body>
+<div id="vugu_mount_point">
+<img style="position: absolute; top: 50%; left: 50%;" src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/text-encoding@0.7.0/lib/encoding.min.js"></script> <!-- MS Edge polyfill -->
+<script src="/wasm_exec.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- scripts -->
+<script>
+function helperFunc() {
+  console.log("In helper func...");
+
+  l = jQuery("#jquery-test-label");
+  l.css("color", "red");
+
+  l.hide();
+  l.show();
+
+  t = l.text()
+  console.log("(Before update, in JS) text = " + t);
+  l.text("Updated (from JS)")
+  t = l.text()
+  console.log("(After update, in JS) text = " + t);
+}
+
+var wasmSupported = (typeof WebAssembly === "object");
+if (wasmSupported) {
+	if (!WebAssembly.instantiateStreaming) { // polyfill
+		WebAssembly.instantiateStreaming = async (resp, importObject) => {
+			const source = await (await resp).arrayBuffer();
+			return await WebAssembly.instantiate(source, importObject);
+		};
+	}
+	var mainWasmReq = fetch("/main.wasm").then(function(res) {
+		if (res.ok) {
+			const go = new Go();
+			WebAssembly.instantiateStreaming(res, go.importObject).then((result) => {
+				go.run(result.instance);
+			});
+		} else {
+			res.text().then(function(txt) {
+				var el = document.getElementById("vugu_mount_point");
+				el.style = 'font-family: monospace; background: black; color: red; padding: 10px';
+				el.innerText = txt;
+			})
+		}
+	})
+} else {
+	document.getElementById("vugu_mount_point").innerHTML = 'This application requires WebAssembly support.  Please upgrade your browser.';
+}
+</script>
+</body>
+</html>
+
+

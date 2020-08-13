@@ -1,0 +1,51 @@
+
+<div>
+    <main role="main" class="container text-center">
+
+        <div>
+                <div class="navbar has-text-white has-background-primary">
+                        <div class="navbar-brand">
+                               <h1>JQuery Test</h1>
+                        </div>
+
+                </div>
+
+                <div>
+                        <div>
+                                <label class="button" @click='c.ExecFromGo(event)'>Exec From Go</label>
+                        </div>
+
+                        <div>
+                                <label class="button" @click='c.InvokeJS(event)'>Invoke JS Function</label>
+                        </div>
+
+                        <div id="jquery-test-div">
+                                <label id="jquery-test-label">Label</label>
+                        </div>
+                </div>
+
+        </div>
+
+    </main>
+</div>
+
+
+
+<script type="application/x-go">
+
+import (
+	"github.com/vugu/vgrouter"
+	"github.com/vugu/vugu"
+)
+
+type Root struct {
+	// ANYTHING THAT MUST NAVIGATE NEED ONLY EMBED THIS
+	vgrouter.NavigatorRef
+
+	// THE BODY COMPONENT, GETS SET BY THE APPROPRIATE ROUTE ABOVE
+	Body vugu.Builder
+
+	events vugu.EventEnv
+}
+
+</script>
